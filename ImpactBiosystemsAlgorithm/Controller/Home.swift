@@ -64,7 +64,6 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
             textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
             textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
             
-        
         ])
         
     }
@@ -121,15 +120,10 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
                 dictionary[word] = 1
                 // Add it to array
                 array.append(word)
-                
             }
-            
         }
-        
         return array
-        
     }
-    
     
     // Separate function just to make code a bit cleaner
     private func isMaxValue(_ value: Int) -> Bool{
