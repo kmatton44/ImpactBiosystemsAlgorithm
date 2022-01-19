@@ -11,7 +11,7 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     
     // MARK: VARIABLES
     
-    private lazy var searchCityTextField: TextFieldWithPadding = {
+    private lazy var inputTextField: TextFieldWithPadding = {
         let textField = TextFieldWithPadding()
         textField.placeholder = "Enter Text:"
         textField.borderStyle = .none
@@ -46,19 +46,18 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
     private func setUpUI() {
         view.backgroundColor = .systemGray4
         
-        view.addSubview(searchCityTextField)
+        view.addSubview(inputTextField)
         view.addSubview(textView)
-        
         
         NSLayoutConstraint.activate([
         
-            searchCityTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
-            searchCityTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+            inputTextField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 5),
+            inputTextField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                            constant: 20),
-            searchCityTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
-            searchCityTextField.heightAnchor.constraint(equalToConstant: 40),
+            inputTextField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            inputTextField.heightAnchor.constraint(equalToConstant: 40),
             
-            textView.topAnchor.constraint(equalTo: searchCityTextField.bottomAnchor, constant: 20),
+            textView.topAnchor.constraint(equalTo: inputTextField.bottomAnchor, constant: 20),
             textView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                            constant: 20),
             textView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
@@ -86,15 +85,15 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
                 // increment it's value by 1
                 dictionary[word] = (dictionary[word] ?? 1) + 1
             
+                guard let value = dictionary[word] else {break}
                 // Check if that value is the max
                 // if maxValue is true, delete that word, then add the word to FRONT of array
-                if isMaxValue(dictionary[word]!) {
+                if isMaxValue(value) {
                     if let index = array.firstIndex(of: word) {
                         array.remove(at: index)
                     }
                     array.insert(word, at: 0) // - O(n)
                 } else {
-                    
                     // takes into account sorting values in the "middle" of the array that arent the max
                     for i in 0..<array.count {
                         // if the current word comes up in the array before checking values, then logically we do not have to check behind it because there is no reason to place a word behind where it currently is.
@@ -102,9 +101,8 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
                         if word == array[i] {
                             break
                         }
-                    
                         // compare current word's value to all previous values to essentially find local maximum
-                        if (dictionary[word]! > dictionary[array[i]]!){
+                        if (value > dictionary[array[i]]!){
                             if let index = array.firstIndex(of: word) {
                                 array.remove(at: index)
                             }
@@ -113,7 +111,6 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
                         }
                     }
                 }
-                 
             }
             else {
                 // add it to dictionary with initial value of 1
@@ -156,6 +153,7 @@ class Home: UIViewController, UITextFieldDelegate, UITextViewDelegate {
         // Reset array and dictionary
         array.removeAll()
         dictionary.removeAll()
+        currentMax = 0
         
         return true
     }
